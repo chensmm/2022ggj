@@ -61,6 +61,7 @@ namespace MoreMountains.CorgiEngine
                 {
                     transform.SetParent(GameController.Instance.transform);
                     isTransforming = false;
+                    Destroy(parentPoint);
                 });
 
             return true;
