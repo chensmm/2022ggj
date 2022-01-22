@@ -40,7 +40,16 @@ namespace MoreMountains.CorgiEngine
                 return false;
             }
 
+            var finalVec = transform.localScale + changeVec;
+            if (finalVec.x < 1 || finalVec.y < 1)
+            {
+                return false;
+            }
+
             isTransforming = true;
+
+
+
 
             var localHitPoint = transform.InverseTransformPoint(point);
             Vector2 parentPos = Vector2.zero;
