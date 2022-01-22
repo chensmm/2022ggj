@@ -4950,7 +4950,7 @@ MonoBehaviour:
   NonDamageableImpactParticles: {fileID: 3913788591247825552}
   TestShootButton: 0
   direction: 1
-  toUseScale: 0
+  toUseScale: 1
   curScale: 5
   scaleMax: 10
   scaleMin: 0
