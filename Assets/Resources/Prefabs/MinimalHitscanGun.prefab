@@ -4942,7 +4942,7 @@ MonoBehaviour:
   SpawnPosition: {x: -71.76, y: -1.38, z: 0}
   HitscanTargetLayers:
     serializedVersion: 2
-    m_Bits: 8448
+    m_Bits: 270592
   HitscanMaxDistance: 100
   DamageCaused: 5
   DamageCausedInvincibilityDuration: 0.2
