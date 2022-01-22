@@ -74,6 +74,44 @@ namespace MoreMountains.CorgiEngine
         /// a button to test the shoot method
 		public bool TestShootButton;
 
+        public int direction = 1;//方向，1=X，-1=Y
+        public int toUseScale = 0;
+        public int curScale = 0;
+        public int scaleMax = 100;
+        public int scaleMin = 0;
+        public int scaleAdd = 1;
+        public int scaleReduce = -1;
+
+        override protected void Update()
+        {
+            base.Update();
+            float scrollWheel = Input.mouseScrollDelta.y;
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                direction *= -1;
+                Debug.Log("Direction=" + direction);
+            }
+            if (scrollWheel > 0.25f)
+            {
+                //向上滚滑轮
+
+                if (toUseScale + scaleAdd <= curScale)
+                {
+                    toUseScale += scaleAdd;
+                    Debug.Log("Scale=" + toUseScale);
+                }
+            }
+            else if (scrollWheel < -0.25f)
+            {
+                //向下滚滑轮
+                if (toUseScale + scaleReduce >= curScale - scaleMax)
+                {
+                    toUseScale += scaleReduce;
+                    Debug.Log("Scale=" + toUseScale);
+                }
+            }
+        }
+
         /// <summary>
         /// A test method that triggers the weapon
         /// </summary>
@@ -144,7 +182,7 @@ namespace MoreMountains.CorgiEngine
         public virtual void SpawnProjectile(Vector3 spawnPosition, bool triggerObjectActivation = true)
         {
             _hitObject = null;
-            
+
             // we cast a ray in front of the weapon to detect an obstacle
             _origin = SpawnPosition;
             _hit2D = MMDebug.RayCast(_origin, _randomSpreadDirection, HitscanMaxDistance, HitscanTargetLayers, Color.red, true);
@@ -159,7 +197,7 @@ namespace MoreMountains.CorgiEngine
                 _hitObject = null;
                 // we play the miss feedback
                 WeaponMiss();
-            }               
+            }
         }
 
         /// <summary>
@@ -173,6 +211,8 @@ namespace MoreMountains.CorgiEngine
             }
 
             WeaponHit();
+
+
 
             _health = _hitObject.MMGetComponentNoAlloc<Health>();
 
@@ -191,7 +231,7 @@ namespace MoreMountains.CorgiEngine
                     NonDamageableImpactParticles.transform.LookAt(this.transform);
                     NonDamageableImpactParticles.Play();
                 }
-                
+
                 WeaponHitNonDamageable();
             }
             else
@@ -209,14 +249,14 @@ namespace MoreMountains.CorgiEngine
                     WeaponOnHitDamageableFeedback.transform.position = _hitPoint;
                     WeaponOnHitDamageableFeedback.transform.LookAt(this.transform);
                 }
-                
+
                 if (DamageableImpactParticles != null)
                 {
                     DamageableImpactParticles.transform.position = _hitPoint;
                     DamageableImpactParticles.transform.LookAt(this.transform);
                     DamageableImpactParticles.Play();
                 }
-                
+
                 WeaponHitDamageable();
             }
 
