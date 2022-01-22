@@ -136,7 +136,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!232 &2199487167646546927
 DistanceJoint2D:
   m_ObjectHideFlags: 0
@@ -154,7 +154,7 @@ DistanceJoint2D:
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0, y: 0}
   m_AutoConfigureDistance: 1
-  m_Distance: 5.9634304
+  m_Distance: 5.546981
   m_MaxDistanceOnly: 0
 --- !u!114 &2199487167646546926
 MonoBehaviour:
