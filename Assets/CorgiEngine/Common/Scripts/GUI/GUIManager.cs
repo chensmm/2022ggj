@@ -46,6 +46,8 @@ namespace MoreMountains.CorgiEngine
 		/// the level display
 		[Tooltip("the level display")]
 		public Text LevelText;
+		[Tooltip("the level display")]
+		public Text ChangeDirection;
 
         [Header("Settings")]
 
@@ -105,6 +107,7 @@ namespace MoreMountains.CorgiEngine
 	            LevelText.enabled = state;
 	        }
 	    }
+
 
 	    /// <summary>
 	    /// Sets the avatar active or inactive
@@ -281,7 +284,7 @@ namespace MoreMountains.CorgiEngine
 	    /// <param name="minFuel">Minimum fuel.</param>
 	    /// <param name="maxFuel">Max fuel.</param>
 	    /// <param name="playerID">Player I.</param>
-		public virtual void UpdateJetpackBar(float currentFuel, float minFuel, float maxFuel,string playerID)
+		public virtual void UpdateJetpackBar(float currentFuel, float minFuel, float maxFuel,string playerID,Color color)
 		{
 			if (JetPackBars == null)
 			{
@@ -294,6 +297,7 @@ namespace MoreMountains.CorgiEngine
 				if (jetpackBar.PlayerID == playerID)
 				{
 					jetpackBar.SetBar(currentFuel,minFuel,maxFuel);
+					jetpackBar.ForegroundBar.GetComponent<Image>().color = color;
 				}    
 			}
 	    }

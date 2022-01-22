@@ -84,6 +84,15 @@ namespace MoreMountains.CorgiEngine
 
         private GameObject hitGo = null;
 
+        private void Start()
+        {
+            if (GUIManager.Instance != null)
+            {
+                GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                GUIManager.Instance.UpdateHealthBar(curScale == 0 ? 1 : curScale, 0f, scaleMax, "Player1");
+            }
+        }
+
         override protected void Update()
         {
             base.Update();
@@ -91,6 +100,20 @@ namespace MoreMountains.CorgiEngine
             if (Input.GetKeyUp(KeyCode.Q))
             {
                 direction *= -1;
+                if(direction==1)
+                {
+                    if (GUIManager.Instance != null)
+                    {
+                        GUIManager.Instance.ChangeDirection.text = "X";
+                    }
+                }
+                else if(direction==-1)
+                {
+                    if (GUIManager.Instance != null)
+                    {
+                        GUIManager.Instance.ChangeDirection.text = "Y";
+                    }
+                }
                 Debug.Log("Direction=" + direction);
             }
             if (scrollWheel > 0.25f)
@@ -100,6 +123,19 @@ namespace MoreMountains.CorgiEngine
                 if (toUseScale + scaleAdd <= curScale)
                 {
                     toUseScale += scaleAdd;
+
+                    if (GUIManager.Instance != null)
+                    {
+                        if (toUseScale < 0)
+                        {
+                            GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
+                        }
+                        else
+                        {
+                            GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                        }
+                    }
+
                     Debug.Log("Scale=" + toUseScale);
                 }
             }
@@ -109,6 +145,18 @@ namespace MoreMountains.CorgiEngine
                 if (toUseScale + scaleReduce >= curScale - scaleMax)
                 {
                     toUseScale += scaleReduce;
+                    if (GUIManager.Instance != null)
+                    {
+                        if(toUseScale<0)
+                        {
+                            GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1",Color.red);
+                        }
+                        else
+                        {
+                            GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                        }
+                        
+                    }
                     Debug.Log("Scale=" + toUseScale);
                 }
             }
@@ -191,31 +239,40 @@ namespace MoreMountains.CorgiEngine
         /// </summary>
         public virtual void SpawnProjectile(Vector3 spawnPosition, bool triggerObjectActivation = true)
         {
-            _hitObject = null;
-
-            // we cast a ray in front of the weapon to detect an obstacle
-            _origin = SpawnPosition;
-            _hit2D = MMDebug.RayCast(_origin, _randomSpreadDirection, HitscanMaxDistance, HitscanTargetLayers, Color.red, true);
-            if (_hit2D)
-            {
-                _hitObject = _hit2D.collider.gameObject;
-                _hitPoint = _hit2D.point;
-
-                if (_hitObject.GetComponent<RHTransformController>())
-                {
-                    if (_hitObject.GetComponent<RHTransformController>().TranformOrder(new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), _hitPoint))
-                    {
-                        curScale -= toUseScale;
-                    }
-                }
-            }
-            // otherwise we just draw our laser in front of our weapon 
-            else
+            if (curScale - toUseScale >= 0)
             {
                 _hitObject = null;
-                // we play the miss feedback
-                WeaponMiss();
+
+                // we cast a ray in front of the weapon to detect an obstacle
+                _origin = SpawnPosition;
+
+                _hit2D = MMDebug.RayCast(_origin, _randomSpreadDirection, HitscanMaxDistance, HitscanTargetLayers, Color.red, true);
+                if (_hit2D)
+                {
+                    _hitObject = _hit2D.collider.gameObject;
+                    _hitPoint = _hit2D.point;
+
+                    if (_hitObject.GetComponent<RHTransformController>())
+                    {
+                        if (_hitObject.GetComponent<RHTransformController>().TranformOrder(new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), _hitPoint))
+                        {
+                            curScale -= toUseScale;
+                            if (GUIManager.Instance != null)
+                            {
+                                GUIManager.Instance.UpdateHealthBar(curScale, 0f, scaleMax, "Player1");
+                            }
+                        }
+                    }
+                }
+                // otherwise we just draw our laser in front of our weapon 
+                else
+                {
+                    _hitObject = null;
+                    // we play the miss feedback
+                    WeaponMiss();
+                }
             }
+
         }
 
         /// <summary>

@@ -294,7 +294,7 @@ namespace MoreMountains.CorgiEngine
             {
                 if ((GUIManager.Instance != null) && (_character.CharacterType == Character.CharacterTypes.Player))
                 {
-                    GUIManager.Instance.UpdateJetpackBar(JetpackFuelDurationLeft, 0f, JetpackFuelDuration, _character.PlayerID);
+                    GUIManager.Instance.UpdateJetpackBar(JetpackFuelDurationLeft, 0f, JetpackFuelDuration, _character.PlayerID,new Color(32,214,250,221));
                 }
             }
 		}
