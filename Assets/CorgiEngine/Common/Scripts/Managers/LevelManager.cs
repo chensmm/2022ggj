@@ -226,10 +226,18 @@ namespace MoreMountains.CorgiEngine
 			}
 		}
 
-		/// <summary>
-		/// Initialization
-		/// </summary>
-		public virtual void Start()
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+        }
+
+        /// <summary>
+        /// Initialization
+        /// </summary>
+        public virtual void Start()
 		{
 			InstantiatePlayableCharacters ();
             if (Players == null || Players.Count == 0) { return; }
