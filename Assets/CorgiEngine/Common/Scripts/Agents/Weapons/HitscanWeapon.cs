@@ -90,6 +90,7 @@ namespace MoreMountains.CorgiEngine
             {
                 GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
                 GUIManager.Instance.UpdateHealthBar(curScale == 0 ? 1 : curScale, 0f, scaleMax, "Player1");
+                GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
             }
         }
 
@@ -100,6 +101,7 @@ namespace MoreMountains.CorgiEngine
             if (Input.GetKeyUp(KeyCode.Q))
             {
                 direction *= -1;
+
                 if(direction==1)
                 {
                     if (GUIManager.Instance != null)
@@ -119,11 +121,10 @@ namespace MoreMountains.CorgiEngine
             if (scrollWheel > 0.25f)
             {
                 //向上滚滑轮
-
                 if (toUseScale + scaleAdd <= curScale)
                 {
                     toUseScale += scaleAdd;
-
+                    GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
                     if (GUIManager.Instance != null)
                     {
                         if (toUseScale < 0)
@@ -134,6 +135,7 @@ namespace MoreMountains.CorgiEngine
                         {
                             GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
                         }
+
                     }
 
                     Debug.Log("Scale=" + toUseScale);
@@ -145,6 +147,7 @@ namespace MoreMountains.CorgiEngine
                 if (toUseScale + scaleReduce >= curScale - scaleMax)
                 {
                     toUseScale += scaleReduce;
+                    GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
                     if (GUIManager.Instance != null)
                     {
                         if(toUseScale<0)
