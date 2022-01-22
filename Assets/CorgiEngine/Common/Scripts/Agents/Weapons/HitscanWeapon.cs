@@ -82,8 +82,6 @@ namespace MoreMountains.CorgiEngine
         public int scaleAdd = 1;
         public int scaleReduce = -1;
 
-        private GameObject hitGo = null;
-
         private void Start()
         {
             if (GUIManager.Instance != null)
@@ -181,6 +179,12 @@ namespace MoreMountains.CorgiEngine
             RaycastHit2D hit;
             hit = MMDebug.RayCast(SpawnPosition, _randomSpreadDirection, HitscanMaxDistance, HitscanTargetLayers, Color.red, true);
             //Debug.Log(hit.transform.name);
+
+            if (hit.transform != null && hit.transform.GetComponent<RHTransformController>())
+            {
+                GameController.Instance.SetMsg(new MirageMsg(hit.transform.gameObject, new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), hit.point));
+
+            }
         }
 
         /// <summary>

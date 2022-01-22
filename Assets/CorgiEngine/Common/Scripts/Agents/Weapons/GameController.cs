@@ -22,7 +22,7 @@ namespace MoreMountains.CorgiEngine
 
         private MirageMsg msg;
 
-        private GameObject MirageGo;
+        public GameObject MirageGo;
 
         private void Awake()
         {
@@ -33,6 +33,11 @@ namespace MoreMountains.CorgiEngine
         void Start()
         {
 
+        }
+
+        public void SetMsg(MirageMsg msg)
+        {
+            this.msg = msg;
         }
 
         // Update is called once per frame
@@ -46,7 +51,7 @@ namespace MoreMountains.CorgiEngine
             if (msg != null)
             {
                 //显示新的虚像
-                msg.go.GetComponent<RHTransformController>().ShowMirage(msg);
+                MirageGo = msg.go.GetComponent<RHTransformController>().ShowMirage(msg);
                 msg = null;
             }
         }
