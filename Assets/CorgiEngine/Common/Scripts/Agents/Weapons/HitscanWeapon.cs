@@ -198,9 +198,15 @@ namespace MoreMountains.CorgiEngine
             {
                 _hitObject = _hit2D.collider.gameObject;
                 _hitPoint = _hit2D.point;
+<<<<<<< HEAD
                 if(_hitObject.GetComponent<RHTransformController>().TranformOrder(new Vector2(direction == 1? toUseScale : 0, direction == -1? toUseScale : 0), _hitPoint))
                 {
                     curScale -= toUseScale;
+=======
+                if (_hitObject.GetComponent<RHTransformController>())
+                {
+                    _hitObject.GetComponent<RHTransformController>().TranformOrder(new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), _hitPoint);
+>>>>>>> 97085891a205a89e174669954b5a09d23ee156db
                 }
             }
             // otherwise we just draw our laser in front of our weapon 
