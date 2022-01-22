@@ -158,7 +158,6 @@ namespace MoreMountains.CorgiEngine
                         {
                             GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
                         }
-                        
                     }
                     Debug.Log("Scale=" + toUseScale);
                 }
@@ -263,6 +262,43 @@ namespace MoreMountains.CorgiEngine
                             if (GUIManager.Instance != null)
                             {
                                 GUIManager.Instance.UpdateHealthBar(curScale, 0f, scaleMax, "Player1");
+                            }
+
+                            if (toUseScale > curScale)
+                            {
+                                toUseScale = curScale;
+                                GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
+                                if (GUIManager.Instance != null)
+                                {
+                                    if (toUseScale < 0)
+                                    {
+                                        GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
+                                    }
+                                    else
+                                    {
+                                        GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                                    }
+
+                                }
+
+                                Debug.Log("Scale=" + toUseScale);
+                            }
+                            if (toUseScale < curScale - scaleMax)
+                            {
+                                toUseScale = curScale - scaleMax;
+                                GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
+                                if (GUIManager.Instance != null)
+                                {
+                                    if (toUseScale < 0)
+                                    {
+                                        GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
+                                    }
+                                    else
+                                    {
+                                        GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                                    }
+                                }
+                                Debug.Log("Scale=" + toUseScale);
                             }
                         }
                     }
