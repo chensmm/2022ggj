@@ -4942,7 +4942,7 @@ MonoBehaviour:
   SpawnPosition: {x: -71.76, y: -1.38, z: 0}
   HitscanTargetLayers:
     serializedVersion: 2
-    m_Bits: 270592
+    m_Bits: 303360
   HitscanMaxDistance: 100
   DamageCaused: 5
   DamageCausedInvincibilityDuration: 0.2
@@ -4951,7 +4951,7 @@ MonoBehaviour:
   TestShootButton: 0
   direction: 1
   toUseScale: 1
-  curScale: 5
+  curScale: 0
   scaleMax: 10
   scaleMin: 0
   scaleAdd: 1
