@@ -946,7 +946,7 @@ MonoBehaviour:
     m_Bits: 262400
   DetectionDirection: 0
   CrushDetectionSkinWidth: 0.02
-  DieWhenCrushed: 1
+  DieWhenCrushed: 0
   ApplyDamageWhenCrushed: 0
   DamageTakenWhenCrushed: 10
   DamageTakenFlickerDuration: 0.2
