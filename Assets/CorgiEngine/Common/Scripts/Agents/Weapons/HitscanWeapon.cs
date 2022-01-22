@@ -117,7 +117,7 @@ namespace MoreMountains.CorgiEngine
             DetermineDirection();
             RaycastHit2D hit;
             hit= MMDebug.RayCast(SpawnPosition, _randomSpreadDirection, HitscanMaxDistance, HitscanTargetLayers, Color.red, true);
-            Debug.Log(hit.transform.name);
+            //Debug.Log(hit.transform.name);
         }
 
         /// <summary>
@@ -198,6 +198,7 @@ namespace MoreMountains.CorgiEngine
             {
                 _hitObject = _hit2D.collider.gameObject;
                 _hitPoint = _hit2D.point;
+                _hitObject.GetComponent<RHTransformController>().TranformOrder(new Vector2(direction == 1? toUseScale : 0, direction == -1? toUseScale : 0), _hitPoint);
             }
             // otherwise we just draw our laser in front of our weapon 
             else
