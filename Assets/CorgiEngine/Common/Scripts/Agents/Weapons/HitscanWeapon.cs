@@ -117,6 +117,16 @@ namespace MoreMountains.CorgiEngine
                 }
                 Debug.Log("Direction=" + direction);
             }
+
+            if(Input.GetKey(KeyCode.E))
+            {
+                Time.timeScale = 0.3f;
+            }
+            else
+            {
+                Time.timeScale = 1f;
+            }
+
             if (scrollWheel > 0.25f)
             {
                 //向上滚滑轮
