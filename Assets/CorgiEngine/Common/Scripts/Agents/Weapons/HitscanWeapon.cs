@@ -89,8 +89,9 @@ namespace MoreMountains.CorgiEngine
             if (GUIManager.Instance != null)
             {
                 GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
-                GUIManager.Instance.UpdateHealthBar(curScale == 0 ? 1 : curScale, 0f, scaleMax, "Player1");
-                GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
+                GUIManager.Instance.UpdateHealthBar(curScale == 0 ? 0.1f : curScale, 0f, scaleMax, "Player1");
+                GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
+                GUIManager.Instance.MagazineUI.text = curScale + "/" + scaleMax;
             }
         }
 
@@ -124,7 +125,7 @@ namespace MoreMountains.CorgiEngine
                 if (toUseScale + scaleAdd <= curScale)
                 {
                     toUseScale += scaleAdd;
-                    GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
+                    GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
                     if (GUIManager.Instance != null)
                     {
                         if (toUseScale < 0)
@@ -147,7 +148,7 @@ namespace MoreMountains.CorgiEngine
                 if (toUseScale + scaleReduce >= curScale - scaleMax)
                 {
                     toUseScale += scaleReduce;
-                    GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
+                    GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
                     if (GUIManager.Instance != null)
                     {
                         if(toUseScale<0)
@@ -259,15 +260,17 @@ namespace MoreMountains.CorgiEngine
                         if (_hitObject.GetComponent<RHTransformController>().TranformOrder(new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), _hitPoint))
                         {
                             curScale -= toUseScale;
+
                             if (GUIManager.Instance != null)
                             {
                                 GUIManager.Instance.UpdateHealthBar(curScale, 0f, scaleMax, "Player1");
+                                GUIManager.Instance.MagazineUI.text = curScale + "/" + scaleMax;
                             }
 
                             if (toUseScale > curScale)
                             {
                                 toUseScale = curScale;
-                                GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
+                                GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
                                 if (GUIManager.Instance != null)
                                 {
                                     if (toUseScale < 0)
@@ -286,7 +289,7 @@ namespace MoreMountains.CorgiEngine
                             if (toUseScale < curScale - scaleMax)
                             {
                                 toUseScale = curScale - scaleMax;
-                                GUIManager.Instance.ScaleToUse.text = "ScaleToUse:" + toUseScale;
+                                GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
                                 if (GUIManager.Instance != null)
                                 {
                                     if (toUseScale < 0)

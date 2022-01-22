@@ -50,7 +50,8 @@ namespace MoreMountains.CorgiEngine
 		public Text ChangeDirection;
 		[Tooltip("the level display")]
 		public Text ScaleToUse;
-
+		[Tooltip("the level display")]
+		public Text MagazineUI;
 		[Header("Settings")]
 
 		/// the pattern to apply when displaying the score
