@@ -110,6 +110,14 @@ namespace MoreMountains.CorgiEngine
                     Debug.Log("Scale=" + toUseScale);
                 }
             }
+
+            Vector3 mousePos = Input.mousePosition;
+            Vector3 mousePosInWorld = Camera.main.ScreenToWorldPoint(mousePos);
+            DetermineSpawnPosition();
+            DetermineDirection();
+            RaycastHit2D hit;
+            hit= MMDebug.RayCast(SpawnPosition, _randomSpreadDirection, HitscanMaxDistance, HitscanTargetLayers, Color.red, true);
+            Debug.Log(hit.transform.name);
         }
 
         /// <summary>
