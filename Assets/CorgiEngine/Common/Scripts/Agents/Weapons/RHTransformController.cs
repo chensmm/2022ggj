@@ -21,11 +21,11 @@ namespace MoreMountains.CorgiEngine
 
         float forceNum;
 
-        int c = 5;
+        int c = 10;//向上
 
-        GameObject MirageGo;
+        int d = 50; //左右
 
-        bool showMirage;
+        float transformTime = 0.2f; //变形时长
 
         /// <summary>
         /// 
@@ -41,7 +41,7 @@ namespace MoreMountains.CorgiEngine
             }
 
             var finalVec = transform.localScale + changeVec;
-            if (finalVec.x < 1 || finalVec.y < 1)
+            if (finalVec.x < 0.999 || finalVec.y < 0.999)
             {
                 return false;
             }
@@ -107,7 +107,7 @@ namespace MoreMountains.CorgiEngine
             parentPoint.transform.localScale = transform.localScale;
             transform.SetParent(parentPoint.transform);
 
-            parentPoint.transform.DOScale(parentPoint.transform.localScale + changeVec, 0.1f).SetEase(Ease.Linear)
+            parentPoint.transform.DOScale(parentPoint.transform.localScale + changeVec, transformTime).SetEase(Ease.Linear)
                 .OnComplete(() =>
                 {
                     transform.SetParent(GameController.Instance.transform);
@@ -134,7 +134,7 @@ namespace MoreMountains.CorgiEngine
 
             finalScale = transform.localScale + changeVec;
 
-            if (finalScale.x < 1 || finalScale.y < 1)
+            if (finalScale.x < 0.999 || finalScale.y < 0.999)
             {
                 return null;
             }
@@ -157,14 +157,9 @@ namespace MoreMountains.CorgiEngine
                 bool isdown = localHitPoint.y < 0;
                 if (isdown)
                 {
-                    if (changeVec.y > 0)
-                    {
-                        pos = new Vector2(transform.position.x, transform.position.y + changeVec.y / 2);
-                    }
-                    else
-                    {
-                        pos = new Vector2(transform.position.x, transform.position.y - changeVec.y / 2);
-                    }
+
+                    pos = new Vector2(transform.position.x, transform.position.y - changeVec.y / 2);
+                    
                 }
                 else
                 {
@@ -186,6 +181,11 @@ namespace MoreMountains.CorgiEngine
         private void OnTriggerEnter2D(Collider2D collision)
         {
             Debug.Log("enter>>>" + collision.gameObject.name);
+            ForcePlayer(collision);
+        }
+
+        private void ForcePlayer(Collider2D collision)
+        {
             var point = collision.ClosestPoint(collision.transform.position);
             bool isPlayer = collision.gameObject.tag == "Player";
             if (isPlayer)
@@ -199,12 +199,12 @@ namespace MoreMountains.CorgiEngine
                         if (vec.x > 0 && cur2Pos == toPos.toright)
                         {
                             //右边
-                            collision.GetComponent<Rigidbody2D>().velocity = (Vector2.right * forceNum * c);
+                            collision.GetComponent<CorgiController>().AddForce(Vector2.right * forceNum * d);
                             addForce = true;
                         }
                         else if (vec.x < 0 && cur2Pos == toPos.toleft)
                         {
-                            collision.GetComponent<Rigidbody2D>().velocity = (Vector2.left * forceNum * c);
+                            collision.GetComponent<CorgiController>().AddForce(Vector2.left * forceNum * d);
                             addForce = true;
                         }
                     }
@@ -213,13 +213,13 @@ namespace MoreMountains.CorgiEngine
                         if (vec.y > 0 && cur2Pos == toPos.totop)
                         {
                             //上边
-                            collision.GetComponent<Rigidbody2D>().velocity = (Vector2.up * forceNum * c);
+                            collision.GetComponent<CorgiController>().AddForce(Vector2.up * forceNum * c);
                             addForce = true;
                         }
                         else if (vec.y < 0 && cur2Pos == toPos.tobottom)
                         {
                             //下边
-                            collision.GetComponent<Rigidbody2D>().velocity = (Vector2.down * forceNum * c);
+                            collision.GetComponent<CorgiController>().AddForce(Vector2.down * forceNum * c);
                             addForce = true;
                         }
                     }
@@ -230,45 +230,7 @@ namespace MoreMountains.CorgiEngine
         private void OnTriggerStay2D(Collider2D collision)
         {
             Debug.Log("stay>>>" + collision.gameObject.name);
-            var point = collision.ClosestPoint(collision.transform.position);
-            bool isPlayer = collision.gameObject.tag == "Player";
-            if (isPlayer)
-            {
-                if (!addForce && isTransforming && cur2Pos != toPos.none)
-                {
-                    var vec = point - (Vector2)transform.position;
-
-                    if (Mathf.Abs(vec.x / vec.y) > transform.localScale.x / transform.localScale.y)
-                    {
-                        if (vec.x > 0 && cur2Pos == toPos.toright)
-                        {
-                            //右边
-                            collision.GetComponent<Rigidbody2D>().velocity = (Vector2.right * forceNum * c);
-                            addForce = true;
-                        }
-                        else if (vec.x < 0 && cur2Pos == toPos.toleft)
-                        {
-                            collision.GetComponent<Rigidbody2D>().velocity = (Vector2.left * forceNum * c);
-                            addForce = true;
-                        }
-                    }
-                    else
-                    {
-                        if (vec.y > 0 && cur2Pos == toPos.totop)
-                        {
-                            //上边
-                            collision.GetComponent<Rigidbody2D>().velocity = (Vector2.up * forceNum * c);
-                            addForce = true;
-                        }
-                        else if (vec.y < 0 && cur2Pos == toPos.tobottom)
-                        {
-                            //下边
-                            collision.GetComponent<Rigidbody2D>().velocity = (Vector2.down * forceNum * c);
-                            addForce = true;
-                        }
-                    }
-                }
-            }
+            ForcePlayer(collision);
         }
 
         private void OnTriggerExit2D(Collider2D collision)
