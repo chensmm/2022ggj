@@ -7,6 +7,10 @@ namespace MoreMountains.CorgiEngine
     {
         bool isTransforming;
 
+        GameObject MirageGo;
+
+        bool showMirage;
+
         /// <summary>
         /// 
         /// </summary>
@@ -51,7 +55,8 @@ namespace MoreMountains.CorgiEngine
                 }
             }
 
-            var parentPoint = Instantiate<GameObject>(new GameObject(), GameController.Instance.transform);
+            var parentPoint = new GameObject();
+            parentPoint.transform.SetParent(GameController.Instance.transform);
             parentPoint.transform.position = parentPos;
             parentPoint.transform.localScale = transform.localScale;
             transform.SetParent(parentPoint.transform);
@@ -66,6 +71,63 @@ namespace MoreMountains.CorgiEngine
 
             return true;
         }
-    }
+        public bool ShowMirage(MirageMsg msg) 
+        {
+            if (isTransforming)
+            {
+                return false;
+            }
+            Vector3 changeVec = msg.changeVec;
+            Vector2 point = msg.point;
 
+            var localHitPoint = transform.InverseTransformPoint(point);
+            Vector2 parentPos = Vector2.zero;
+
+            if (changeVec.x != 0)
+            {
+                bool isLeft = localHitPoint.x < 0;
+                if (isLeft)
+                {
+                    parentPos = new Vector2(transform.position.x + transform.localScale.x / 2, transform.position.y);
+                }
+                else
+                {
+                    parentPos = new Vector2(transform.position.x - transform.localScale.x / 2, transform.position.y);
+                }
+
+            }
+            else if (changeVec.y != 0)
+            {
+                bool isdown = localHitPoint.y < 0;
+                if (isdown)
+                {
+                    parentPos = new Vector2(transform.position.x, transform.position.y + transform.localScale.y / 2);
+                }
+                else
+                {
+                    parentPos = new Vector2(transform.position.x, transform.position.y - transform.localScale.y / 2);
+                }
+            }
+
+            var parentPoint = new GameObject();
+            parentPoint.transform.SetParent(GameController.Instance.transform);
+            parentPoint.transform.position = parentPos;
+            parentPoint.transform.localScale = transform.localScale;
+
+
+            return false;
+        }
+
+        private void LateUpdate()
+        {
+            if (!showMirage)
+            {
+                return;
+            }
+
+            showMirage = false;
+        }
+
+        private void ActiveMirage
+    }
 }
