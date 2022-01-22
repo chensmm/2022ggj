@@ -120,12 +120,6 @@ namespace MoreMountains.CorgiEngine
             RaycastHit2D hit;
             hit = MMDebug.RayCast(SpawnPosition, _randomSpreadDirection, HitscanMaxDistance, HitscanTargetLayers, Color.red, true);
             //Debug.Log(hit.transform.name);
-
-            if (hit.)
-            {
-
-            }
-            hit.transform.GetComponent<RHTransformController>().ShowMirage(new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), hit.point);
         }
 
         /// <summary>

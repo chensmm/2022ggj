@@ -71,11 +71,11 @@ namespace MoreMountains.CorgiEngine
 
             return true;
         }
-        public bool ShowMirage(MirageMsg msg) 
+        public GameObject ShowMirage(MirageMsg msg) 
         {
             if (isTransforming)
             {
-                return false;
+                return null;
             }
             Vector3 changeVec = msg.changeVec;
             Vector2 point = msg.point;
@@ -112,10 +112,10 @@ namespace MoreMountains.CorgiEngine
             var parentPoint = new GameObject();
             parentPoint.transform.SetParent(GameController.Instance.transform);
             parentPoint.transform.position = parentPos;
-            parentPoint.transform.localScale = transform.localScale;
 
 
-            return false;
+
+            return null;
         }
 
         private void LateUpdate()
@@ -127,7 +127,5 @@ namespace MoreMountains.CorgiEngine
 
             showMirage = false;
         }
-
-        private void ActiveMirage
     }
 }
