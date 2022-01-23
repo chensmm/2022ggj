@@ -40,7 +40,7 @@ namespace MoreMountains.Tools
 
         [Header("Binding")]
 		/// The name of the scene to load while the actual target scene is loading (usually a loading screen)
-		public static string LoadingScreenSceneName="LoadingScreen";
+		public static string LoadingScreenSceneName= "MainLevel 1";
 
 		[Header("GameObjects")]
 		/// the text object where you want the loading message to be displayed
