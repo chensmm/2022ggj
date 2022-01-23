@@ -43,7 +43,7 @@ namespace MoreMountains.CorgiEngine
             var finalVec = transform.localScale + changeVec;
             if(transform.gameObject.layer!=15)
             {
-                if (finalVec.x < 1 || finalVec.y < 1)
+                if (finalVec.x < 0.999 || finalVec.y < 0.999)
                 {
 
                     return false;
