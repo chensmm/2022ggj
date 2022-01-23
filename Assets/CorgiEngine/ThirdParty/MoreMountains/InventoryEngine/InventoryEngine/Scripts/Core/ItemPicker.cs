@@ -85,27 +85,27 @@ namespace MoreMountains.InventoryEngine
 		/// <param name="targetInventoryName">Target inventory name.</param>
 		public virtual void Pick(string targetInventoryName)
 		{
-			FindTargetInventory (targetInventoryName);
-			if (_targetInventory==null)
-			{
-				return;
-			}
+			//FindTargetInventory (targetInventoryName);
+			//if (_targetInventory==null)
+			//{
+			//	return;
+			//}
 
-			if (!Pickable()) 
-			{
-				PickFail ();
-				return;
-			}
+			//if (!Pickable()) 
+			//{
+			//	PickFail ();
+			//	return;
+			//}
 
-			DetermineMaxQuantity ();
-			if (!Application.isPlaying)
-			{
-				_targetInventory.AddItem(Item, 1);
-			}				
-			else
-			{
-				MMInventoryEvent.Trigger(MMInventoryEventType.Pick, null, Item.TargetInventoryName, Item, _pickedQuantity, 0);
-			}				
+			//DetermineMaxQuantity ();
+			//if (!Application.isPlaying)
+			//{
+			//	_targetInventory.AddItem(Item, 1);
+			//}				
+			//else
+			//{
+			//	MMInventoryEvent.Trigger(MMInventoryEventType.Pick, null, Item.TargetInventoryName, Item, _pickedQuantity, 0);
+			//}				
 			if (Item.Pick())
             {
                 Quantity = Quantity - _pickedQuantity;
@@ -136,10 +136,10 @@ namespace MoreMountains.InventoryEngine
 		protected virtual void DisableObjectIfNeeded()
 		{
 			// we desactivate the gameobject
-			if (DisableObjectWhenDepleted && Quantity <= 0)
-			{
+			//if (DisableObjectWhenDepleted && Quantity <= 0)
+			//{
 				gameObject.SetActive(false);	
-			}
+			//}
 		}
 
 		/// <summary>
