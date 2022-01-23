@@ -21,11 +21,11 @@ namespace MoreMountains.CorgiEngine
 
         float forceNum;
 
-        int c = 10;//向上
+        int c = 5;//向上
 
         int d = 50; //左右
 
-        float transformTime = 0.2f; //变形时长
+        float transformTime = 0.3f; //变形时长
 
         /// <summary>
         /// 
@@ -204,12 +204,14 @@ namespace MoreMountains.CorgiEngine
                         if (vec.x > 0 && cur2Pos == toPos.toright)
                         {
                             //右边
-                            collision.GetComponent<CorgiController>().AddForce(Vector2.right * forceNum * d);
+                            collision.GetComponent<CorgiController>().SetForce(Vector2.zero);
+                            collision.GetComponent<CorgiController>().SetForce(Vector2.right * forceNum * d);
                             addForce = true;
                         }
                         else if (vec.x < 0 && cur2Pos == toPos.toleft)
                         {
-                            collision.GetComponent<CorgiController>().AddForce(Vector2.left * forceNum * d);
+                            collision.GetComponent<CorgiController>().SetForce(Vector2.zero);
+                            collision.GetComponent<CorgiController>().SetForce(Vector2.left * forceNum * d);
                             addForce = true;
                         }
                     }
@@ -218,13 +220,15 @@ namespace MoreMountains.CorgiEngine
                         if (vec.y > 0 && cur2Pos == toPos.totop)
                         {
                             //上边
-                            collision.GetComponent<CorgiController>().AddForce(Vector2.up * forceNum * c);
+                            collision.GetComponent<CorgiController>().SetForce(Vector2.zero);
+                            collision.GetComponent<CorgiController>().SetForce(Vector2.up * forceNum * c);
                             addForce = true;
                         }
                         else if (vec.y < 0 && cur2Pos == toPos.tobottom)
                         {
                             //下边
-                            collision.GetComponent<CorgiController>().AddForce(Vector2.down * forceNum * c);
+                            collision.GetComponent<CorgiController>().SetForce(Vector2.zero);
+                            collision.GetComponent<CorgiController>().SetForce(Vector2.down * forceNum * c);
                             addForce = true;
                         }
                     }
