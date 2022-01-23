@@ -52,6 +52,8 @@ namespace MoreMountains.CorgiEngine
 		public Text ScaleToUse;
 		[Tooltip("the level display")]
 		public Text MagazineUI;
+		[Tooltip("the level display")]
+		public Text YouWinUI;
 		[Header("Settings")]
 
 		/// the pattern to apply when displaying the score

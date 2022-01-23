@@ -188,6 +188,10 @@ namespace MoreMountains.CorgiEngine
 			// if the teleporter is supposed to only affect the player (well, corgiControllers), we do nothing and exit
 			if (OnlyAffectsPlayer || !AutoActivation)
             {
+                if(collider.transform.tag=="Player")
+                {
+                    GUIManager.Instance.YouWinUI.gameObject.SetActive(true);
+                }
                 base.OnTriggerEnter2D(collider);
 			}
 			else
