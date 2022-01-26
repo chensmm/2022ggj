@@ -152,7 +152,7 @@ namespace MoreMountains.CorgiEngine
                     var newMousePosInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     var direction2 = mouseOriginPosInWorld - newMousePosInWorld;
                     touchPos = hit1.transform.InverseTransformPoint(mouseOriginPosInWorld);
-                    Debug.Log(direction2);
+                    //aDebug.Log(direction2);
                     if (Mathf.Abs(direction2.x) > Mathf.Abs(direction2.y))
                     {
                         direction = 1;
