@@ -82,6 +82,12 @@ namespace MoreMountains.CorgiEngine
         public int scaleAdd = 1;
         public int scaleReduce = -1;
 
+        bool isPressing;
+        Vector3 mouseOriginPosInWorld;
+        Vector3 touchPos;
+        Ray ray;
+        RaycastHit2D hit1;
+
         private void Start()
         {
             if (GUIManager.Instance != null)
@@ -96,95 +102,200 @@ namespace MoreMountains.CorgiEngine
         override protected void Update()
         {
             base.Update();
-            float scrollWheel = Input.mouseScrollDelta.y;
-            if (Input.GetKeyUp(KeyCode.Q))
-            {
-                direction *= -1;
+            //float scrollWheel = Input.mouseScrollDelta.y;
+            //if (Input.GetKeyUp(KeyCode.Q))
+            //{
+            //    direction *= -1;
 
-                if(direction==1)
+            //    if (direction == 1)
+            //    {
+            //        if (GUIManager.Instance != null)
+            //        {
+            //            GUIManager.Instance.ChangeDirection.text = "X";
+            //        }
+            //    }
+            //    else if (direction == -1)
+            //    {
+            //        if (GUIManager.Instance != null)
+            //        {
+            //            GUIManager.Instance.ChangeDirection.text = "Y";
+            //        }
+            //    }
+            //    Debug.Log("Direction=" + direction);
+            //}
+
+            //if (Input.GetKey(KeyCode.E))
+            //{
+            //    Time.timeScale = 0.3f;
+            //}
+            //else
+            //{
+            //    Time.timeScale = 1f;
+            //}
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                hit1 = Physics2D.Raycast(new Vector2(ray.origin.x, ray.origin.y), Vector2.zero, Mathf.Infinity, HitscanTargetLayers);
+                if (hit1.transform != null && hit1.transform.GetComponent<RHTransformController>())
                 {
-                    if (GUIManager.Instance != null)
-                    {
-                        GUIManager.Instance.ChangeDirection.text = "X";
-                    }
+                    isPressing = true;
+                    mouseOriginPosInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    Time.timeScale = 0.3f;
+                    //GameController.Instance.SetMsg(new MirageMsg(hit1.transform.gameObject, new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), hit1.point));
                 }
-                else if(direction==-1)
+            }
+            if (Input.GetMouseButton(0))
+            {
+                if (isPressing)
                 {
-                    if (GUIManager.Instance != null)
+                    var newMousePosInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    var direction2 = mouseOriginPosInWorld - newMousePosInWorld;
+                    touchPos = hit1.transform.InverseTransformPoint(mouseOriginPosInWorld);
+                    Debug.Log(direction2);
+                    if (Mathf.Abs(direction2.x) > Mathf.Abs(direction2.y))
                     {
-                        GUIManager.Instance.ChangeDirection.text = "Y";
-                    }
-                }
-                Debug.Log("Direction=" + direction);
-            }
-
-            if(Input.GetKey(KeyCode.E))
-            {
-                Time.timeScale = 0.3f;
-            }
-            else
-            {
-                Time.timeScale = 1f;
-            }
-
-            if (scrollWheel > 0.25f)
-            {
-                //向上滚滑轮
-                if (toUseScale + scaleAdd <= curScale)
-                {
-                    toUseScale += scaleAdd;
-                    GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
-                    if (GUIManager.Instance != null)
-                    {
-                        if (toUseScale < 0)
+                        direction = 1;
+                        bool isleft = touchPos.x < 0;
+                        if (isleft)
                         {
-                            GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
+                            toUseScale = (int)direction2.x / 1;
                         }
                         else
                         {
-                            GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                            toUseScale = -(int)direction2.x / 1;
                         }
-
                     }
-
-                    Debug.Log("Scale=" + toUseScale);
-                }
-            }
-            else if (scrollWheel < -0.25f)
-            {
-                //向下滚滑轮
-                if (toUseScale + scaleReduce >= curScale - scaleMax)
-                {
-                    toUseScale += scaleReduce;
-                    GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
-                    if (GUIManager.Instance != null)
+                    else
                     {
-                        if(toUseScale<0)
-                        {
-                            GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1",Color.red);
-                        }
+                        direction = -1;
+                        bool isdown = touchPos.y < 0;
+                        if (isdown)
+                            toUseScale = (int)direction2.y / 1;
                         else
+                            toUseScale = -(int)direction2.y / 1;
+                    }
+                    if (toUseScale > curScale)
+                    {
+                        toUseScale /= Mathf.Abs(toUseScale);
+                        toUseScale *= curScale;
+                    }
+                    GameController.Instance.SetMsg(new MirageMsg(hit1.transform.gameObject, new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), touchPos));
+                }
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (isPressing)
+                {
+                    isPressing = false;
+                    Time.timeScale = 1f;
+
+                    if (hit1.transform.GetComponent<RHTransformController>().TranformOrder(new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), touchPos))
+                    {
+                        curScale -= toUseScale;
+
+                        if (GUIManager.Instance != null)
                         {
-                            GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                            GUIManager.Instance.UpdateHealthBar(curScale, 0f, scaleMax, "Player1");
+                            GUIManager.Instance.MagazineUI.text = curScale + "/" + scaleMax;
+                        }
+
+                        if (toUseScale > curScale)
+                        {
+                            toUseScale = curScale;
+                            GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
+                            if (GUIManager.Instance != null)
+                            {
+                                if (toUseScale < 0)
+                                {
+                                    GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
+                                }
+                                else
+                                {
+                                    GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                                }
+
+                            }
+
+                            Debug.Log("Scale=" + toUseScale);
+                        }
+                        if (toUseScale < curScale - scaleMax)
+                        {
+                            toUseScale = curScale - scaleMax;
+                            GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
+                            if (GUIManager.Instance != null)
+                            {
+                                if (toUseScale < 0)
+                                {
+                                    GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
+                                }
+                                else
+                                {
+                                    GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                                }
+                            }
+                            Debug.Log("Scale=" + toUseScale);
                         }
                     }
-                    Debug.Log("Scale=" + toUseScale);
+
                 }
             }
 
-            Vector3 mousePos = Input.mousePosition;
-            Vector3 mousePosInWorld = Camera.main.ScreenToWorldPoint(mousePos);
-            DetermineSpawnPosition();
-            DetermineDirection();
-            RaycastHit2D hit;
-            hit = MMDebug.RayCast(SpawnPosition, _randomSpreadDirection, HitscanMaxDistance, HitscanTargetLayers, Color.red, true);
-            //Debug.Log(hit.transform.name);
+            //if (scrollWheel > 0.25f)
+            //{
+            //    //向上滚滑轮
+            //    if (toUseScale + scaleAdd <= curScale)
+            //    {
+            //        toUseScale += scaleAdd;
+            //        GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
+            //        if (GUIManager.Instance != null)
+            //        {
+            //            if (toUseScale < 0)
+            //            {
+            //                GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
+            //            }
+            //            else
+            //            {
+            //                GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+            //            }
+            //        }
+            //        Debug.Log("Scale=" + toUseScale);
+            //    }
+            //}
+            //else if (scrollWheel < -0.25f)
+            //{
+            //    //向下滚滑轮
+            //    if (toUseScale + scaleReduce >= curScale - scaleMax)
+            //    {
+            //        toUseScale += scaleReduce;
+            //        GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
+            //        if (GUIManager.Instance != null)
+            //        {
+            //            if(toUseScale<0)
+            //            {
+            //                GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1",Color.red);
+            //            }
+            //            else
+            //            {
+            //                GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+            //            }
+            //        }
+            //        Debug.Log("Scale=" + toUseScale);
+            //    }
+            //}
 
-            if (hit.transform != null && hit.transform.GetComponent<RHTransformController>())
-            {
-                GameController.Instance.SetMsg(new MirageMsg(hit.transform.gameObject, new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), hit.point));
+            //Vector3 mousePos = Input.mousePosition;
+            //Vector3 mousePosInWorld = Camera.main.ScreenToWorldPoint(mousePos);
+            //DetermineSpawnPosition();
+            //DetermineDirection();
+            //RaycastHit2D hit;
+            //hit = MMDebug.RayCast(SpawnPosition, _randomSpreadDirection, HitscanMaxDistance, HitscanTargetLayers, Color.red, true);
+            ////Debug.Log(hit.transform.name);
 
-            }
+            //if (hit.transform != null && hit.transform.GetComponent<RHTransformController>())
+            //{
+            //    GameController.Instance.SetMsg(new MirageMsg(hit.transform.gameObject, new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), hit.point));
+            //}
         }
 
         /// <summary>
@@ -269,56 +380,56 @@ namespace MoreMountains.CorgiEngine
                     _hitObject = _hit2D.collider.gameObject;
                     _hitPoint = _hit2D.point;
 
-                    if (_hitObject.GetComponent<RHTransformController>())
-                    {
-                        if (_hitObject.GetComponent<RHTransformController>().TranformOrder(new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), _hitPoint))
-                        {
-                            curScale -= toUseScale;
+                    //if (_hitObject.GetComponent<RHTransformController>())
+                    //{
+                    //    if (_hitObject.GetComponent<RHTransformController>().TranformOrder(new Vector2(direction == 1 ? toUseScale : 0, direction == -1 ? toUseScale : 0), _hitPoint))
+                    //    {
+                    //        curScale -= toUseScale;
 
-                            if (GUIManager.Instance != null)
-                            {
-                                GUIManager.Instance.UpdateHealthBar(curScale, 0f, scaleMax, "Player1");
-                                GUIManager.Instance.MagazineUI.text = curScale + "/" + scaleMax;
-                            }
+                    //        if (GUIManager.Instance != null)
+                    //        {
+                    //            GUIManager.Instance.UpdateHealthBar(curScale, 0f, scaleMax, "Player1");
+                    //            GUIManager.Instance.MagazineUI.text = curScale + "/" + scaleMax;
+                    //        }
 
-                            if (toUseScale > curScale)
-                            {
-                                toUseScale = curScale;
-                                GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
-                                if (GUIManager.Instance != null)
-                                {
-                                    if (toUseScale < 0)
-                                    {
-                                        GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
-                                    }
-                                    else
-                                    {
-                                        GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
-                                    }
+                    //        if (toUseScale > curScale)
+                    //        {
+                    //            toUseScale = curScale;
+                    //            GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
+                    //            if (GUIManager.Instance != null)
+                    //            {
+                    //                if (toUseScale < 0)
+                    //                {
+                    //                    GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
+                    //                }
+                    //                else
+                    //                {
+                    //                    GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                    //                }
 
-                                }
+                    //            }
 
-                                Debug.Log("Scale=" + toUseScale);
-                            }
-                            if (toUseScale < curScale - scaleMax)
-                            {
-                                toUseScale = curScale - scaleMax;
-                                GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
-                                if (GUIManager.Instance != null)
-                                {
-                                    if (toUseScale < 0)
-                                    {
-                                        GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
-                                    }
-                                    else
-                                    {
-                                        GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
-                                    }
-                                }
-                                Debug.Log("Scale=" + toUseScale);
-                            }
-                        }
-                    }
+                    //            Debug.Log("Scale=" + toUseScale);
+                    //        }
+                    //        if (toUseScale < curScale - scaleMax)
+                    //        {
+                    //            toUseScale = curScale - scaleMax;
+                    //            GUIManager.Instance.ScaleToUse.text = "ToUse:" + toUseScale;
+                    //            if (GUIManager.Instance != null)
+                    //            {
+                    //                if (toUseScale < 0)
+                    //                {
+                    //                    GUIManager.Instance.UpdateJetpackBar(-toUseScale, 0f, scaleMax, "Player1", Color.red);
+                    //                }
+                    //                else
+                    //                {
+                    //                    GUIManager.Instance.UpdateJetpackBar(toUseScale, 0f, scaleMax, "Player1", new Color(32, 214, 250, 221));
+                    //                }
+                    //            }
+                    //            Debug.Log("Scale=" + toUseScale);
+                    //        }
+                    //    }
+                    //}
                 }
                 // otherwise we just draw our laser in front of our weapon 
                 else

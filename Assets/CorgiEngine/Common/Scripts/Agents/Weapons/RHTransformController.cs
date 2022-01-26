@@ -55,8 +55,8 @@ namespace MoreMountains.CorgiEngine
 
 
 
-
-            var localHitPoint = transform.InverseTransformPoint(point);
+            var localHitPoint = point;
+            //var localHitPoint = transform.InverseTransformPoint(point);
             Vector2 parentPos = Vector2.zero;
 
             if (changeVec.x != 0)
@@ -131,9 +131,10 @@ namespace MoreMountains.CorgiEngine
                 return null;
             }
             Vector3 changeVec = msg.changeVec;
-            Vector2 point = msg.point;
+            var localHitPoint = msg.point;
+            //Vector2 point = msg.point;
 
-            var localHitPoint = transform.InverseTransformPoint(point);
+            //var localHitPoint = transform.InverseTransformPoint(point);
             Vector2 pos = Vector2.zero;
             Vector3 finalScale = Vector3.zero;
 
@@ -238,13 +239,13 @@ namespace MoreMountains.CorgiEngine
 
         private void OnTriggerStay2D(Collider2D collision)
         {
-            Debug.Log("stay>>>" + collision.gameObject.name);
+            //Debug.Log("stay>>>" + collision.gameObject.name);
             ForcePlayer(collision);
         }
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            Debug.Log("enter>>>" + collision.gameObject.name);
+            //Debug.Log("enter>>>" + collision.gameObject.name);
             bool isPlayer = collision.gameObject.tag == "Player";
             if (isPlayer && addForce)
             {
